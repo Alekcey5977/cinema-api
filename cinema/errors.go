@@ -24,11 +24,11 @@ func NewErrorDTO(message string, time time.Time) *ErrorDTO {
 	}
 }
 
-func (e ErrorDTO) ToString() (string, error) {
+func (e ErrorDTO) ToString() string {
 	b, err := json.MarshalIndent(e, "", "    ")
 	if err != nil {
-		return "", fmt.Errorf("failed to marshal ErrorDTO: %w", err)
+		panic(err)
 	}
 
-	return string(b), nil
+	return string(b)
 }

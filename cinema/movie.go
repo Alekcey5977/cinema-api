@@ -7,7 +7,7 @@ import (
 	"unicode/utf8"
 )
 
-type movie struct {
+type Movie struct {
 	Title          string
 	Description    string
 	Genres         []string
@@ -24,8 +24,8 @@ func NewMovie(title string,
 	yearsOfRelease int,
 	rating float64,
 	country string,
-	adult bool) *movie {
-	return &movie{
+	adult bool) *Movie {
+	return &Movie{
 		Title:          title,
 		Description:    description,
 		Genres:         genres,
@@ -36,7 +36,7 @@ func NewMovie(title string,
 	}
 }
 
-func (m movie) ValidateMovieData() error {
+func (m Movie) ValidateMovieData() error {
 	var errorLits []string
 
 	// title validation
@@ -70,7 +70,7 @@ func (m movie) ValidateMovieData() error {
 			errorLits = append(errorLits, "genre of the movie cannot exceed 1000 characters")
 		}
 
-		for j := i +1; j < len(m.Genres); j++ {
+		for j := i + 1; j < len(m.Genres); j++ {
 			if strings.EqualFold(genre, m.Genres[j]) {
 				errorLits = append(errorLits, "duplicate genres found:"+genre)
 			}
@@ -82,7 +82,7 @@ func (m movie) ValidateMovieData() error {
 	if m.YearsOfRelease < 1888 {
 		errorLits = append(errorLits, "year pf production cannot be earlier than 1888")
 	}
-	if m.YearsOfRelease > currentYear + 1 {
+	if m.YearsOfRelease > currentYear+1 {
 		errorLits = append(errorLits, "release data may not exceed the curent year by more than 1 year")
 	}
 
@@ -107,7 +107,7 @@ func (m movie) ValidateMovieData() error {
 	return nil
 }
 
-func (m *movie) ChangeRating(newRating float64) error {
+func (m *Movie) ChangeRating(newRating float64) error {
 	if newRating < 0 || newRating > 10 {
 		return ErrIncorrectRating
 	}

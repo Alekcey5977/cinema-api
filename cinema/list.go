@@ -4,19 +4,18 @@ import (
 	"sync"
 )
 
-
 type List struct {
-	Movies map[string]movie
-	mtx sync.RWMutex
+	Movies map[string]Movie
+	mtx    sync.RWMutex
 }
 
 func NewList() *List {
 	return &List{
-		Movies: make(map[string]movie),
+		Movies: make(map[string]Movie),
 	}
 }
 
-func (l *List) AddMovie(movie movie) error {
+func (l *List) AddMovie(movie Movie) error {
 	l.mtx.Lock()
 	defer l.mtx.Unlock()
 
@@ -29,38 +28,69 @@ func (l *List) AddMovie(movie movie) error {
 	return nil
 }
 
-func (l *List) GetMovie(title string) (movie, error) {
+func (l *List) GetAdultMovie() map[string]Movie {
+	l.mtx.RLock()
+	defer l.mtx.RUnlock()
+
+	movies := make(map[string]Movie, len(l.Movies))
+
+	for k, v := range l.Movies {
+		if v.Adult {
+			movies[k] = v
+		}
+	}
+
+	return movies
+
+}
+
+func (l *List) GetNotAdultMovie() map[string]Movie {
+	l.mtx.RLock()
+	defer l.mtx.RUnlock()
+
+	movies := make(map[string]Movie, len(l.Movies))
+
+	for k, v := range l.Movies {
+		if !v.Adult {
+			movies[k] = v
+		}
+	}
+
+	return movies
+}
+
+func (l *List) GetMovie(title string) (Movie, error) {
 	l.mtx.RLock()
 	defer l.mtx.RUnlock()
 
 	getMovie, ok := l.Movies[title]
 	if !ok {
-		return movie{}, ErrMovieNotFound
+		return Movie{}, ErrMovieNotFound
 	}
 
 	return getMovie, nil
 }
 
-func (l *List) ListMovies() map[string]movie {
+func (l *List) ListMovies() map[string]Movie {
 	l.mtx.RLock()
 	defer l.mtx.RUnlock()
 
-	movies := make(map[string]movie, len(l.Movies))
+	movies := make(map[string]Movie, len(l.Movies))
 
-	for k,  v := range l.Movies {
+	for k, v := range l.Movies {
 		movies[k] = v
 	}
 
 	return movies
 }
 
-func (l *List) ChangeRatingMovie(title string, rating float64) (movie, error) {
+func (l *List) ChangeRatingMovie(title string, rating float64) (Movie, error) {
 	l.mtx.Lock()
 	defer l.mtx.Unlock()
 
 	getMovie, ok := l.Movies[title]
 	if ok {
-		return movie{}, ErrMovieNotFound
+		return Movie{}, ErrMovieNotFound
 	}
 
 	getMovie.ChangeRating(rating)
