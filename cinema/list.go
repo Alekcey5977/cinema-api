@@ -93,7 +93,9 @@ func (l *List) ChangeRatingMovie(title string, rating float64) (Movie, error) {
 		return Movie{}, ErrMovieNotFound
 	}
 
-	getMovie.ChangeRating(rating)
+	if err := getMovie.ChangeRating(rating); err != nil {
+		return Movie{}, ErrIncorrectRating
+	}
 
 	l.Movies[title] = getMovie
 
