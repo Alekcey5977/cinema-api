@@ -16,6 +16,12 @@ type HTTPHandlers struct {
 	listMovie *cinema.List 
 }
 
+func NewHTTPHandlers(cinemaList *cinema.List) *HTTPHandlers {
+	return &HTTPHandlers{
+		listMovie: cinemaList,
+	}
+}
+
 /*
 pattern: /movie
 
@@ -45,6 +51,8 @@ func (h *HTTPHandlers) HandlerCteateMovie(w http.ResponseWriter, r *http.Request
 		errDTO := NewErrorDTO(err.Error(), time.Now())
 
 		http.Error(w, errDTO.ToString(), http.StatusBadRequest)
+
+		return
 	}
 
 	cinemaMovie := cinema.NewMovie(
@@ -75,7 +83,7 @@ func (h *HTTPHandlers) HandlerCteateMovie(w http.ResponseWriter, r *http.Request
 
 	w.WriteHeader(http.StatusOK)
 	if _, err := w.Write(b); err != nil {
-		fmt.Println("failed to write http response", err)
+		fmt.Println("failed to write http response:", err)
 		return
 	}
 }
@@ -120,7 +128,7 @@ func (h *HTTPHandlers) HandlerGetMovie(w http.ResponseWriter, r *http.Request) {
 	
 	w.WriteHeader(http.StatusOK)
 	if _, err := w.Write(b); err != nil {
-		fmt.Println("failed to write http response ", err)
+		fmt.Println("failed to write http response:", err)
 		return
 	}
 }
@@ -150,7 +158,7 @@ func (h *HTTPHandlers) HandlerGetAllMovie(w http.ResponseWriter, r *http.Request
 	
 	w.WriteHeader(http.StatusOK)
 	if _, err := w.Write(b); err != nil {
-		fmt.Println("failed to write http response", err)
+		fmt.Println("failed to write http response:", err)
 		return
 	}
 	
@@ -207,7 +215,7 @@ func(h *HTTPHandlers) HandlerChangeRating(w http.ResponseWriter, r *http.Request
 
 	w.WriteHeader(http.StatusOK)
 	if _, err := w.Write(b); err != nil {
-		fmt.Println("failed to write http response", err)
+		fmt.Println("failed to write http response:", err)
 
 		return
 	}
@@ -238,7 +246,7 @@ func (h *HTTPHandlers) HandlerGetAdultMovie(w http.ResponseWriter, r *http.Reque
 
 	w.WriteHeader(http.StatusOK)
 	if _, err := w.Write(b); err != nil {
-		fmt.Println("failed to write http response", err)
+		fmt.Println("failed to write http response:", err)
 		
 		return
 	}
@@ -269,7 +277,7 @@ func (h *HTTPHandlers) HandlerGetNotAdultMovie(w http.ResponseWriter, r *http.Re
 
 	w.WriteHeader(http.StatusOK)
 	if _, err := w.Write(b); err != nil {
-		fmt.Println("failed to write http response", err)
+		fmt.Println("failed to write http response:", err)
 		
 		return
 	}

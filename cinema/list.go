@@ -89,7 +89,7 @@ func (l *List) ChangeRatingMovie(title string, rating float64) (Movie, error) {
 	defer l.mtx.Unlock()
 
 	getMovie, ok := l.Movies[title]
-	if ok {
+	if !ok {
 		return Movie{}, ErrMovieNotFound
 	}
 
@@ -107,7 +107,7 @@ func (l *List) DeleteMovie(title string) error {
 	defer l.mtx.Unlock()
 
 	_, ok := l.Movies[title]
-	if ok {
+	if !ok {
 		return ErrMovieNotFound
 	}
 

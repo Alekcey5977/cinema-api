@@ -6,7 +6,7 @@ import (
 )
 
 type RatingChangeDTO struct {
-	Rating float64
+	Rating float64 `json:"rating"`
 }
 
 type ErrorDTO struct {

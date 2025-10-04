@@ -8,13 +8,13 @@ import (
 )
 
 type Movie struct {
-	Title          string
-	Description    string
-	Genres         []string
-	YearsOfRelease int
-	Rating         float64 //  0 <= Rating <= 10
-	Country        string
-	Adult          bool
+	Title          string `json:"title"`
+	Description    string `json:"description"`
+	Genres         []string `json:"genres"`
+	YearsOfRelease int `json:"release"`
+	Rating         float64 `json:"rating"` //  0 <= Rating <= 10
+	Country        string `json:"country"`
+	Adult          bool `json:"adult"`
 }
 
 // Создать новый фильм
@@ -36,7 +36,7 @@ func NewMovie(title string,
 	}
 }
 
-func (m Movie) ValidateMovieData() error {
+func (m *Movie) ValidateMovieData() error {
 	var errorLits []string
 
 	// title validation
