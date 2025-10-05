@@ -3,7 +3,7 @@ package http
 import (
 	"errors"
 	"net/http"
-
+	"github.com/gorilla/handlers"
 	"github.com/gorilla/mux"
 )
 
@@ -28,7 +28,13 @@ func (s *HTTPServer) StartServer() error {
 	router.Path("/movie/{title}").Methods("PATCH").HandlerFunc(s.httpHandles.HandlerChangeRating)
 	router.Path("/movie/{title}").Methods("DELETE").HandlerFunc(s.httpHandles.HandlerDeleteMovie)
 	
-	if err := http.ListenAndServe(":9091", router); err != nil {
+	coursHandler := handlers.CORS(
+		handlers.AllowedOrigins([]string{"http://localhost:5173"}),
+		handlers.AllowedMethods([]string{"GET", "POST", "PATCH", "DELETE", "OPTIONS"}),
+		handlers.AllowedHeaders([]string{"Content-Type", "Authorization"}),
+	)(router)
+
+	if err := http.ListenAndServe(":9091", coursHandler); err != nil {
 		if errors.Is(err, http.ErrServerClosed) {
 			return nil
 		}
